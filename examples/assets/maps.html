@@ -1,0 +1,174 @@
+<html>
+  <head>
+    <title>A-Frame WMS Component - Simple example</title>
+    <meta name="description" content="Simple example for WMS component in a flat panel."></meta>
+    <script src="https://aframe.io/releases/0.7.1/aframe.min.js"></script> 
+    <script src="https://unpkg.com/aframe-geojson-component/dist/aframe-geojson-component.min.js"></script> 
+    <script src="https://unpkg.com/aframe-wms-component/dist/aframe-wms-component.min.js"></script> 
+    <script src="https://cdn.rawgit.com/zcanter/aframe-gradient-sky/master/dist/gradientsky.min.js"></script>
+    <script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v3.12.3/dist/aframe-extras.min.js"></script>
+    <script src="./selection-to-text.js"></script>
+  </head>
+  <body>
+    <a-scene>
+    
+      <a-assets>
+        <a-asset-item id="json-world-110m" src="assets/world-110m.v1.json" />
+        <a-asset-item id="tsv-world-110m" src="assets/world-110m.v1.tsv" />
+      	<a-asset-item id="json-flights" src="assets/flightdata.geojson" />
+      </a-assets>
+      
+
+       <!------ Panel Movies ------>
+
+      <a-entity position="-1.5 1 -1" rotation="0 10 0">
+      <a-plane src="../movies/sept_2017.mp4" height="1.7" width="3"></a-plane>
+       <a-entity id="countries-plate"
+          position="0 0 0"
+          class="gazeactivated"
+          geometry="primitive: plane; width: 3; height: 1.5;"
+          material="shader: flat; color: #000; transparent: true;"
+          geojson="src: #json-world-110m; topologyObject: countries;
+            lineWidth: 1; 
+            dataSrc: #tsv-world-110m; dataType: tsv; dataKey: iso_n3;
+            featureEventName: raycaster-intersected;"
+          visible="true"
+          selection-to-text
+          >
+        </a-entity>
+          <a-entity id="places-plane"
+          class="gazeactivated"
+          position="0 0 0"
+          geometry="primitive: plane; width: 3; height: 1.5;"
+          material="color: #F0A; transparent: true;"
+          geojson="src: #json-flights; 
+          pointScale: 0.01;
+          featureKey: id; 
+          pointAs:line;
+          featureEventName: raycaster-intersected;"
+          selection-to-text="
+          featureProperty: Flight;
+          "
+          >
+          </a-entity> 
+      </a-entity>
+	<!--------------------------->
+	
+	<!------ Panel Countries ------>
+	
+     <a-entity position="1.5 1 -1" rotation="0 -10 0">
+       <a-entity id="countries-plate"
+          position="0 0 0"
+          class="gazeactivated"
+          geometry="primitive: plane; width: 3; height: 1.5;"
+          material="shader: flat; color: #000; transparent: true;"
+          geojson="src: #json-world-110m; topologyObject: countries;
+            lineWidth: 1; 
+            dataSrc: #tsv-world-110m; dataType: tsv; dataKey: iso_n3;
+            featureEventName: raycaster-intersected;"
+          visible="true"
+          selection-to-text
+          >
+          <a-plane src="./assets/land_shallow_topo_2048.jpg" height="1.5" width="3"></a-plane>
+        </a-entity>
+          <a-entity id="places-plane"
+          class="gazeactivated"
+          position="0 0 0"
+          geometry="primitive: plane; width: 3; height: 1.5;"
+          material="color: #F0A; transparent: true;"
+          geojson="src: #json-flights; 
+          pointScale: 0.01;
+          featureKey: id; 
+          pointAs:line;
+          featureEventName: raycaster-intersected;"
+          selection-to-text="
+          featureProperty: Flight;
+          "
+          >
+          </a-entity> 
+      </a-entity>
+      
+	<!------ Sphere ------>
+      <a-entity position="-3 1 1">
+          <a-entity
+          geometry="primitive: sphere; radius: 0.68;"
+          material="color: #000; transparent: true; side: front;"
+          wms="
+          url: http://ows.terrestris.de/osm/service;
+          bbox: -88,-180,88,180;
+          projection: EPSG:4326;
+          version: 1.3.0;
+          format: PNG;
+          layers: OSM-WMS;
+          width: 4096;
+          height: 2048;
+          "
+          >
+        </a-entity>
+        <a-entity id="places-globe"
+          class="gazeactivated"
+          geometry="primitive: sphere; radius: 0.7;"
+          material="color: #F0A; transparent: true;"
+          geojson="src: #json-flights; 
+          pointScale: 0.01;
+          pointAs:line;
+          featureKey: id; featureEventName: raycaster-intersected;"
+          selection-to-text="
+          featureProperty: Flight;
+          "
+          >
+          </a-entity> 
+            <a-animation attribute="rotation"
+               dur="70000"
+               to="0 360 0"
+               easing="linear"
+               repeat="indefinite">
+             </a-animation>
+      </a-entity>
+      
+      <!------ Cylinder ------>
+      <a-entity position="-1.5 1 2.2">
+          <a-entity
+          geometry="primitive: cylinder; radius: 0.3; height: 0.7;"
+          material="color: #000; transparent: true; side: front;"
+          wms="
+          url: http://ows.terrestris.de/osm/service;
+          bbox: -88,-180,88,180;
+          projection: EPSG:4326;
+          version: 1.3.0;
+          format: PNG;
+          layers: TOPO-WMS;
+          width: 2048;
+          height: 1024;
+          "
+          >
+        </a-entity>
+        <a-animation attribute="rotation"
+               dur="70000"
+               to="0 360 0"
+               easing="linear"
+               repeat="indefinite">
+        </a-animation>
+      </a-entity>
+      
+     <!------ BB8 object ------>
+   <a-entity    animation-mixer="clip: *"
+                position="2 -1 2"
+                rotation="0 180 0"
+				
+                gltf-model-next="src: url(bb8/scene.gltf);"
+       >
+		</a-entity>
+		
+        
+      <!------ BB8 object ------>
+       <a-camera id="camera" position="0 0 1"  user-height="1.7" wasd-controls-enabled="true" look-controls-enabled="true">
+          <a-text id="infoText" color="grey" value="" position="0 -0.2 -1" scale="0.4 0.4 0.4"></a-text>
+          <a-cursor fuse objects=".gazeactivated" interval="1000"></a-cursor>
+        </a-camera>
+       <a-gradient-sky material="shader: gradient; topColor: 255 0 0; bottomColor: 0 121 255;"></a-gradient-sky>
+      <!-- Ground -->
+	<a-circle position="0 -1 0" color="white" rotation="-90 -150 0" scale="5 5 5"></a-circle>
+    </a-scene>
+  </body>
+</html>

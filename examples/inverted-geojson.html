@@ -1,0 +1,100 @@
+<head>
+  <title>My A-Frame Scene</title>
+<!--   <script src="https://aframe.io/releases/0.7.0/aframe.min.js"></script> 
+  <script src="https://unpkg.com/aframe-geojson-component/dist/aframe-geojson-component.min.js"></script>  -->
+  <script src="../../aframe-geojson-component/examples/build.js"></script> 
+  <script src="./selection-to-text-geojson.js"></script>
+  
+  <script src="//cdn.rawgit.com/donmccurdy/aframe-extras/v3.12.3/dist/aframe-extras.min.js"></script>
+</head>
+ 
+  <body>
+    <a-scene>
+      <a-assets>
+        <a-asset-item id="json-world-50m" src="assets/world-50m.v1.json" />
+        <a-asset-item id="tsv-world-50m" src="assets/world-50m.v1.tsv" />
+        <a-asset-item id="json-world-110m" src="assets/world-110m.v1.json" />
+        <a-asset-item id="tsv-world-110m" src="assets/world-110m.v1.tsv" />
+
+        <a-asset-item id="json-plates" src="assets/plates.json" />
+        <a-asset-item id="json-rivers" src="assets/ne_50m_rivers_lake_centerlines.geojson" />
+
+        <a-asset-item id="json-places" src="assets/ne_110m_populated_places_simple.geojson" />
+      </a-assets>
+
+      <a-entity scale="-1 1 1">
+
+        <a-entity id="countries-globe"
+          class="gazeactivated"
+          geometry="primitive: sphere; radius: 100;"
+          material="color: black; transparent: true; side: back;"
+          geojson="src: #json-world-110m; topologyObject: countries;
+            lineWidth: 20; 
+            dataSrc: #tsv-world-110m; dataType: tsv; dataKey: iso_n3;
+            featureEventName: raycaster-intersected;
+            "
+          selection-to-text
+          >
+		  
+        </a-entity>
+
+
+        <a-entity id="rivers-globe"
+          class="gazeactivated"
+          geometry="primitive: sphere; radius: 100;"
+          material="color: #0AF; transparent: true; side: back;"
+          geojson="src: #json-rivers; 
+          featureKey: name; featureEventName: raycaster-intersected;"
+          visible="true"
+          selection-to-text
+          >
+          </a-entity>
+   
+
+        <a-entity id="places-globe"
+          class="gazeactivated"
+          geometry="primitive: sphere; radius: 100;"
+          material="color: #F0A; transparent: true; side: back;"
+          geojson="src: #json-places; 
+          pointScale: 1;
+          featureKey: name; featureEventName: raycaster-intersected;"
+          selection-to-text
+          >
+          </a-entity> 
+          
+        <!--
+        <a-entity id="plates-globe"
+          class="gazeactivated"
+          geometry="primitive: sphere; radius: 100;"
+          material="color: #000; transparent: true; side: back;"
+          geojson="src: #json-plates;
+            lineWidth: 1; 
+            dataKey: Code;
+            featureKey: PlateName;
+            featureEventName: raycaster-intersected;
+            "
+          selection-to-text="featureProperty: PlateName;"
+          >
+        </a-entity>
+        -->
+
+      </a-entity>
+
+	  
+	  <!-- Vive controls -->
+<a-entity vive-controls="hand: left"></a-entity>
+<a-entity vive-controls="hand: right" ></a-entity>
+
+
+        <a-camera id="camera"  user-height="0" wasd-controls-enabled="true" look-controls-enabled="true">
+
+          <a-text id="infoText" color="grey" value="" position="0 0 -0.8" scale="0.4 0.4 0.4"></a-text>
+
+          <a-cursor fuse objects=".gazeactivated" interval="2000"></a-cursor>
+        </a-camera><!--
+		<a-sky color="white"></a-sky>
+		-->
+        <a-sky src="land_shallow_topo_2048.jpg" radius=100.5></a-sky>
+		
+    </a-scene>
+  </body>
